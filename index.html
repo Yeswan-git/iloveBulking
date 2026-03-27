@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="BULK.OS — The calorie tracking system engineered for maximum gains." />
+  <meta name="theme-color" content="#060608" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="BULK.OS" />
+  <title>BULK.OS — Calorie Engine</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,700;0,900;1,900&family=JetBrains+Mono:wght@400;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     OVERLAY
+═══════════════════════════════════════════════════════════ -->
+<div id="overlay" class="overlay hidden"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SETUP MODAL — First Launch Onboarding
+═══════════════════════════════════════════════════════════ -->
+<div id="setup-modal" class="modal hidden">
+  <div class="modal-inner">
+    <div class="modal-header">
+      <div class="modal-logo">BULK<span>.OS</span></div>
+      <p class="modal-subtitle">INITIALIZE YOUR PROTOCOL</p>
+    </div>
+
+    <div class="setup-steps">
+      <!-- Step 1: Identity -->
+      <div class="step active" data-step="1">
+        <h3 class="step-title"><span class="step-num">01</span> IDENTITY</h3>
+        <div class="form-group">
+          <label>ATHLETE NAME</label>
+          <input type="text" id="s-name" placeholder="Enter your name" autocomplete="off" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>AGE</label>
+            <input type="number" id="s-age" placeholder="25" min="15" max="80" />
+          </div>
+          <div class="form-group">
+            <label>GENDER</label>
+            <div class="toggle-group">
+              <button class="toggle-btn active" data-val="male" data-target="s-gender">MALE</button>
+              <button class="toggle-btn" data-val="female" data-target="s-gender">FEMALE</button>
+            </div>
+            <input type="hidden" id="s-gender" value="male" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Body Stats -->
+      <div class="step hidden" data-step="2">
+        <h3 class="step-title"><span class="step-num">02</span> BODY STATS</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>WEIGHT</label>
+            <div class="input-with-unit">
+              <input type="number" id="s-weight" placeholder="80" min="30" max="300" />
+              <div class="unit-toggle">
+                <button class="toggle-btn active" data-val="kg" data-target="s-weight-unit">KG</button>
+                <button class="toggle-btn" data-val="lbs" data-target="s-weight-unit">LBS</button>
+              </div>
+            </div>
+            <input type="hidden" id="s-weight-unit" value="kg" />
+          </div>
+          <div class="form-group">
+            <label>HEIGHT</label>
+            <div class="input-with-unit">
+              <input type="number" id="s-height" placeholder="178" min="100" max="250" />
+              <div class="unit-toggle">
+                <button class="toggle-btn active" data-val="cm" data-target="s-height-unit">CM</button>
+                <button class="toggle-btn" data-val="in" data-target="s-height-unit">IN</button>
+              </div>
+            </div>
+            <input type="hidden" id="s-height-unit" value="cm" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>ACTIVITY LEVEL</label>
+          <select id="s-activity">
+            <option value="1.2">Sedentary (desk job, no exercise)</option>
+            <option value="1.375">Lightly Active (1–3 days/week)</option>
+            <option value="1.55" selected>Moderately Active (3–5 days/week)</option>
+            <option value="1.725">Very Active (6–7 days/week)</option>
+            <option value="1.9">Extra Active (athlete / physical job)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Step 3: Bulk Protocol -->
+      <div class="step hidden" data-step="3">
+        <h3 class="step-title"><span class="step-num">03</span> BULK PROTOCOL</h3>
+        <div class="form-group">
+          <label>SURPLUS STRATEGY</label>
+          <div class="protocol-cards">
+            <div class="protocol-card active" data-surplus="300">
+              <span class="protocol-name">LEAN</span>
+              <span class="protocol-val">+300 kcal</span>
+              <span class="protocol-desc">Minimal fat gain</span>
+            </div>
+            <div class="protocol-card" data-surplus="500">
+              <span class="protocol-name">STANDARD</span>
+              <span class="protocol-val">+500 kcal</span>
+              <span class="protocol-desc">Best of both worlds</span>
+            </div>
+            <div class="protocol-card" data-surplus="750">
+              <span class="protocol-name">AGGRESSIVE</span>
+              <span class="protocol-val">+750 kcal</span>
+              <span class="protocol-desc">Maximum mass gain</span>
+            </div>
+          </div>
+          <input type="hidden" id="s-surplus" value="300" />
+        </div>
+        <div class="form-group">
+          <label>MEAL FREQUENCY</label>
+          <div class="toggle-group meals-toggle">
+            <button class="toggle-btn" data-val="4" data-target="s-meals">4x</button>
+            <button class="toggle-btn active" data-val="5" data-target="s-meals">5x</button>
+            <button class="toggle-btn" data-val="6" data-target="s-meals">6x</button>
+          </div>
+          <input type="hidden" id="s-meals" value="5" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Step Nav -->
+    <div class="step-nav">
+      <button id="setup-prev" class="btn-ghost hidden">← BACK</button>
+      <div class="step-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+      <button id="setup-next" class="btn-primary">NEXT →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     LOG FOOD MODAL
+═══════════════════════════════════════════════════════════ -->
+<div id="log-modal" class="modal hidden">
+  <div class="modal-inner log-modal-inner">
+    <div class="modal-topbar">
+      <h2>LOG FOOD</h2>
+      <button class="close-modal" data-modal="log-modal">✕</button>
+    </div>
+
+    <div class="log-search-wrap">
+      <div class="search-box">
+        <span class="search-icon">⌕</span>
+        <input type="text" id="food-search" placeholder="Search food (e.g. chicken breast, oats...)" autocomplete="off" />
+      </div>
+      <div id="search-results" class="search-results hidden"></div>
+    </div>
+
+    <div id="selected-food-panel" class="selected-food hidden">
+      <div class="selected-food-info">
+        <span id="sel-food-name" class="sel-name"></span>
+        <div class="sel-macros" id="sel-macros-preview"></div>
+      </div>
+      <div class="weight-input-wrap">
+        <label>WEIGHT (GRAMS)</label>
+        <div class="weight-controls">
+          <div class="quick-grams">
+            <button class="gram-btn" data-g="50">50g</button>
+            <button class="gram-btn" data-g="100">100g</button>
+            <button class="gram-btn" data-g="150">150g</button>
+            <button class="gram-btn" data-g="200">200g</button>
+            <button class="gram-btn" data-g="300">300g</button>
+            <button class="gram-btn" data-g="500">500g</button>
+          </div>
+          <div class="weight-manual">
+            <button class="weight-adj" data-delta="-10">−</button>
+            <input type="number" id="weight-input" value="100" min="1" max="2000" />
+            <button class="weight-adj" data-delta="10">+</button>
+          </div>
+        </div>
+      </div>
+      <div id="calc-preview" class="calc-preview"></div>
+      <button id="confirm-log" class="btn-primary full-width">⚡ ADD TO LOG</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ALARM SETTINGS MODAL
+═══════════════════════════════════════════════════════════ -->
+<div id="alarm-modal" class="modal hidden">
+  <div class="modal-inner">
+    <div class="modal-topbar">
+      <h2>MEAL ALARMS</h2>
+      <button class="close-modal" data-modal="alarm-modal">✕</button>
+    </div>
+    <p class="alarm-desc">Set alarms for each eating window. You'll receive a desktop notification + alarm sound when it's time to eat.</p>
+    <div id="alarm-list" class="alarm-list"></div>
+    <div class="alarm-add-row">
+      <input type="time" id="new-alarm-time" value="08:00" />
+      <input type="text" id="new-alarm-label" placeholder="Meal label (e.g. Pre-Workout)" />
+      <button id="add-alarm-btn" class="btn-primary">+ ADD</button>
+    </div>
+    <div class="alarm-controls">
+      <button id="test-alarm-btn" class="btn-ghost">▶ TEST ALARM</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TOAST NOTIFICATION
+═══════════════════════════════════════════════════════════ -->
+<div id="toast" class="toast hidden"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MAIN APPLICATION
+═══════════════════════════════════════════════════════════ -->
+<div id="app" class="app hidden">
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-logo">BULK<span>.OS</span></div>
+    <div class="header-center">
+      <span id="header-date" class="header-date"></span>
+    </div>
+    <div class="header-actions">
+      <button id="notif-btn" class="icon-btn" title="Meal Alarms">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span id="alarm-badge" class="badge hidden">0</span>
+      </button>
+      <button id="settings-btn" class="icon-btn" title="Profile Settings">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- TAB NAV -->
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="dashboard">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      DASHBOARD
+    </button>
+    <button class="tab-btn" data-tab="log">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      LOG FOOD
+    </button>
+    <button class="tab-btn" data-tab="suggestions">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      SUGGEST
+    </button>
+    <button class="tab-btn" data-tab="calendar">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      CALENDAR
+    </button>
+  </nav>
+
+  <!-- ══════ TAB: DASHBOARD ══════ -->
+  <section id="tab-dashboard" class="tab-content active">
+
+    <!-- Welcome Banner -->
+    <div class="welcome-strip">
+      <span id="greeting-text">GOOD MORNING,</span>
+      <span id="athlete-name" class="athlete-name">ATHLETE</span>
+    </div>
+
+    <!-- Calorie Ring + Stats -->
+    <div class="calorie-hero">
+      <div class="calorie-ring-wrap">
+        <svg class="calorie-ring" viewBox="0 0 200 200">
+          <circle class="ring-bg" cx="100" cy="100" r="85" />
+          <circle class="ring-fill calories-ring-fill" id="calorie-ring-fill" cx="100" cy="100" r="85"
+            stroke-dasharray="534" stroke-dashoffset="534" />
+        </svg>
+        <div class="ring-center">
+          <div class="ring-consumed" id="ring-consumed">0</div>
+          <div class="ring-label">KCAL</div>
+          <div class="ring-target" id="ring-target">/ 0</div>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-val" id="hero-remaining">0</span>
+          <span class="hero-stat-label">REMAINING</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-val" id="hero-surplus">+0</span>
+          <span class="hero-stat-label">SURPLUS</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-val" id="hero-tdee">0</span>
+          <span class="hero-stat-label">TDEE</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-val" id="hero-meals">0</span>
+          <span class="hero-stat-label">MEALS TODAY</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Macro Progress Bars -->
+    <div class="macro-section">
+      <h4 class="section-label">MACROS</h4>
+      <div class="macro-bars">
+        <div class="macro-bar-row">
+          <div class="macro-bar-label">
+            <span class="macro-name protein-text">PROTEIN</span>
+            <span class="macro-val" id="protein-val">0 / 0g</span>
+          </div>
+          <div class="macro-bar-track">
+            <div class="macro-bar-fill protein-fill" id="protein-bar" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="macro-bar-row">
+          <div class="macro-bar-label">
+            <span class="macro-name carbs-text">CARBS</span>
+            <span class="macro-val" id="carbs-val">0 / 0g</span>
+          </div>
+          <div class="macro-bar-track">
+            <div class="macro-bar-fill carbs-fill" id="carbs-bar" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="macro-bar-row">
+          <div class="macro-bar-label">
+            <span class="macro-name fats-text">FATS</span>
+            <span class="macro-val" id="fats-val">0 / 0g</span>
+          </div>
+          <div class="macro-bar-track">
+            <div class="macro-bar-fill fats-fill" id="fats-bar" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Log Button -->
+    <button id="quick-log-btn" class="btn-log-cta">
+      <span class="log-cta-icon">+</span>
+      <span>LOG FOOD</span>
+    </button>
+
+    <!-- Today's Food Log -->
+    <div class="log-section">
+      <div class="log-section-header">
+        <h4 class="section-label">TODAY'S LOG</h4>
+        <span id="log-total-kcal" class="log-total-kcal">0 kcal logged</span>
+      </div>
+      <div id="food-log-list" class="food-log-list">
+        <div class="empty-log">
+          <div class="empty-icon">🍽</div>
+          <p>No meals logged yet.<br/>Hit the button above to start tracking.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Suggestion Banner (dynamic) -->
+    <div id="suggestion-banner" class="suggestion-banner hidden">
+      <div class="suggest-header">
+        <span class="suggest-icon">⚡</span>
+        <span class="suggest-title">BULK ALERT</span>
+      </div>
+      <p id="suggest-message" class="suggest-message"></p>
+      <div id="suggest-card" class="suggest-snack-card"></div>
+    </div>
+
+  </section>
+
+  <!-- ══════ TAB: LOG FOOD (inline version) ══════ -->
+  <section id="tab-log" class="tab-content hidden">
+    <div class="tab-inner">
+      <h2 class="tab-heading">LOG FOOD</h2>
+      <div class="log-search-wrap standalone">
+        <div class="search-box">
+          <span class="search-icon">⌕</span>
+          <input type="text" id="food-search-tab" placeholder="Search food database..." autocomplete="off" />
+        </div>
+        <div id="search-results-tab" class="search-results hidden"></div>
+      </div>
+      <div id="selected-food-panel-tab" class="selected-food hidden">
+        <div class="selected-food-info">
+          <span id="sel-food-name-tab" class="sel-name"></span>
+          <div class="sel-macros" id="sel-macros-preview-tab"></div>
+        </div>
+        <div class="weight-input-wrap">
+          <label>WEIGHT (GRAMS)</label>
+          <div class="weight-controls">
+            <div class="quick-grams">
+              <button class="gram-btn-tab" data-g="50">50g</button>
+              <button class="gram-btn-tab" data-g="100">100g</button>
+              <button class="gram-btn-tab" data-g="150">150g</button>
+              <button class="gram-btn-tab" data-g="200">200g</button>
+              <button class="gram-btn-tab" data-g="300">300g</button>
+              <button class="gram-btn-tab" data-g="500">500g</button>
+            </div>
+            <div class="weight-manual">
+              <button class="weight-adj-tab" data-delta="-10">−</button>
+              <input type="number" id="weight-input-tab" value="100" min="1" max="2000" />
+              <button class="weight-adj-tab" data-delta="10">+</button>
+            </div>
+          </div>
+        </div>
+        <div id="calc-preview-tab" class="calc-preview"></div>
+        <button id="confirm-log-tab" class="btn-primary full-width">⚡ ADD TO LOG</button>
+      </div>
+
+      <!-- Food Category Quick Browse -->
+      <div class="food-categories">
+        <h4 class="section-label" style="margin-top: 2rem;">BROWSE BY CATEGORY</h4>
+        <div class="category-tabs">
+          <button class="cat-btn active" data-cat="all">ALL</button>
+          <button class="cat-btn" data-cat="protein">PROTEIN</button>
+          <button class="cat-btn" data-cat="carbs">CARBS</button>
+          <button class="cat-btn" data-cat="fats">FATS</button>
+        </div>
+        <div id="food-grid" class="food-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════ TAB: SUGGESTIONS ══════ -->
+  <section id="tab-suggestions" class="tab-content hidden">
+    <div class="tab-inner">
+      <h2 class="tab-heading">BULK INTEL</h2>
+      <div id="intel-status" class="intel-status"></div>
+
+      <h4 class="section-label" style="margin-top: 1.5rem;">RECOMMENDED SNACKS</h4>
+      <div id="snack-grid" class="snack-grid"></div>
+
+      <h4 class="section-label" style="margin-top: 2rem;">DAILY BREAKDOWN</h4>
+      <div id="daily-breakdown" class="daily-breakdown"></div>
+    </div>
+  </section>
+
+  <!-- ══════ TAB: CALENDAR ══════ -->
+  <section id="tab-calendar" class="tab-content hidden">
+    <div class="tab-inner">
+      <h2 class="tab-heading">MEAL SCHEDULER</h2>
+      <p class="tab-desc">Generate Google Calendar events for your eating windows. Click any block to open in Google Calendar.</p>
+
+      <div class="calendar-hero">
+        <div class="cal-stat">
+          <span id="cal-meals-count" class="cal-stat-val">5</span>
+          <span class="cal-stat-label">MEALS / DAY</span>
+        </div>
+        <div class="cal-stat">
+          <span id="cal-kcal-per-meal" class="cal-stat-val">640</span>
+          <span class="cal-stat-label">KCAL / MEAL</span>
+        </div>
+      </div>
+
+      <h4 class="section-label">EATING WINDOWS</h4>
+      <div id="cal-events-list" class="cal-events-list"></div>
+
+      <button id="open-all-cal" class="btn-primary full-width" style="margin-top: 1.5rem;">
+        📅 SCHEDULE ALL IN GOOGLE CALENDAR
+      </button>
+
+      <div class="alarm-section-header">
+        <h4 class="section-label" style="margin-top: 2rem;">MEAL ALARMS</h4>
+        <button id="manage-alarms-btn" class="btn-ghost small">MANAGE</button>
+      </div>
+      <div id="alarm-summary" class="alarm-summary"></div>
+      <div class="notif-permission-wrap">
+        <button id="request-notif-btn" class="btn-ghost full-width">🔔 ENABLE DESKTOP NOTIFICATIONS</button>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /#app -->
+
+<script src="js/app.js"></script>
+</body>
+</html>
